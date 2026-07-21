@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFinance } from "../hooks/useFinance";
-
+import Spinner from "../components/common/Spinner";
 import SummaryGrid from "../components/dashboard/SummaryGrid";
 import TransactionForm from "../components/transactions/TransactionForm";
 import TransactionTable from "../components/transactions/TransactionTable";
@@ -9,6 +9,8 @@ import PageContainer from "../components/common/PageContainer";
 import TransactionFilters from "../components/filters/TransactionFilters";
 import useDebounce from "../hooks/useDebounce";
 import Pagination from "../components/common/Pagination";
+import { useAuth } from "../hooks/useAuth";
+import Button from "../components/common/Button";
 
 function Dashboard() {
     const {fetchTransactions, fetchSummary} = useFinance();
@@ -21,6 +23,8 @@ function Dashboard() {
     } = useFinance();
 
     const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+    const {user,logout} = useAuth();
 
     const handleDelete = async () => {
         if(!transactionToDelete) return;
@@ -66,16 +70,37 @@ function Dashboard() {
         fetchSummary();
     }, []);
     console.log(pagination);
+    const { loading } = useFinance();
+
+    if (loading) {
+        return (
+            <PageContainer>
+                <div className="flex justify-center py-20">
+                    <Spinner />
+                </div>
+            </PageContainer>
+        );
+    }
     return(
         <PageContainer>
-            <header className="mb-8">
-                <h1 className="text-4xl font-bold text-slate-900">
-                    Personal Finance Tracker
-                </h1>
+            <header className="mb-8 flex items-center justify-between">
+                <div>
+                    <h1 className="text-4xl font-bold text-slate-900">
+                        Personal Finance Tracker
+                    </h1>
 
-                <p className="text-slate-500 mt-2">
-                    Manage your income and expenses effortlessly.
-                </p>
+                    <p className="mt-2 text-slate-500">
+                        Welcome back, <span className="font-semibold">{user?.name}</span>
+                    </p>
+                </div>
+
+                <Button
+                    variant="danger"
+                    className="w-auto px-6"
+                    onClick={logout}
+                >
+                    Logout
+                </Button>
             </header>
             <SummaryGrid />
             <div className="mt-8">
