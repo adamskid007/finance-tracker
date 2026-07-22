@@ -4,7 +4,9 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "start": "node src/service.js",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
