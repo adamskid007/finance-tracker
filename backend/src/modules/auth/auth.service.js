@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import prisma from "../../config/prisma.js";
 import { loginSchema, registerSchema } from "./auth.validator.js";
 import AppError from "../../utils/AppError.js";
