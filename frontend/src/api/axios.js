@@ -20,12 +20,18 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
-            localStorage.removeItem("token");
+        const token = localStorage.getItem("token");
 
+        // Only redirect if a logged-in user loses authorization
+        if (error.response?.status === 401 && token) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+
+            window.location.href = "/login";
         }
 
         return Promise.reject(error);
     }
 );
+
 export default api;
